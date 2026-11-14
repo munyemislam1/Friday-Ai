@@ -93,13 +93,30 @@ chat.appendChild(div);
 chat.scrollTop=chat.scrollHeight;
 }
 
-function speak(text){
-if(!("speechSynthesis" in window))return;
-const voice=new SpeechSynthesisUtterance(text);
-voice.lang="en-US";
-voice.pitch=1.15;
-speechSynthesis.speak(voice);
+function speak(text) {
+    if (!("speechSynthesis" in window)) return;
+
+    speechSynthesis.cancel();
+
+    const voices = speechSynthesis.getVoices();
+
+    const femaleVoice = voices.find(v =>
+        /samantha|ava|karen|moira|tessa|zira|aria|jenny/i.test(v.name)
+    );
+
+    const speech = new SpeechSynthesisUtterance(text);
+
+    speech.lang = "en-US";
+    speech.rate = 0.95;
+    speech.pitch = 1.15;
+
+    if (femaleVoice) {
+        speech.voice = femaleVoice;
+    }
+
+    speechSynthesis.speak(speech);
 }
+
 
 function getReply(message){
 const t=message.toLowerCase();
