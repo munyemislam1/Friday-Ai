@@ -1,1 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRIDAY AI</title>
 
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+background:radial-gradient(circle,#102c50,#030712);
+color:white;
+font-family:Arial,sans-serif;
+text-align:center;
+}
+header{padding:22px;border-bottom:1px solid #164c7c}
+h1{color:#39c5ff;letter-spacing:5px}
+.status{color:#43eaff;font-size:12px}
+main{max-width:600px;margin:auto;padding:20px}
+.core{
+width:190px;height:190px;border:3px solid #27baff;
+border-radius:50%;margin:30px auto;
+display:flex;align-items:center;justify-content:center;
+box-shadow:0 0 30px #008cff,inset 0 0 30px #008cff;
+animation:glow 2s infinite;
+}
+.core span{font-size:65px;color:#8beaff}
+@keyframes glow{
+50%{box-shadow:0 0 60px #00aaff,inset 0 0 45px #00aaff}
+}
+h2{color:#55cfff}
+#chat{
+height:280px;overflow-y:auto;background:#07172a;
+border:1px solid #1764a0;border-radius:12px;
+padding:12px;text-align:left;margin-top:25px;
+}
+.message{padding:11px;margin:9px 0;border-radius:9px}
+.user{background:#123f68;text-align:right}
+.bot{background:#0c2944;color:#7de0ff}
+.controls{display:flex;gap:8px;margin-top:12px}
+input{
+flex:1;min-width:0;padding:14px;
+border:1px solid #168bd0;border-radius:9px;
+background:#07172b;color:white;font-size:15px;
+}
+button{
+padding:13px 17px;border:0;border-radius:9px;
+background:#078bd2;color:white;font-size:15px;
+}
+.extra{width:100%;margin-top:12px}
+footer{padding:25px;color:#6688a8;font-size:12px}
+</style>
+</head>
+
+<body>
+<header>
+<h1>FRIDAY AI</h1>
+<div class="status">● PERSONAL AI SYSTEM ONLINE</div>
+</header>
+
+<main>
+<div class="core"><span>F</span></div>
+<h2>Hello! I'm FRIDAY.</h2>
+<p>Your personal AI assistant.</p>
+
+<div id="chat">
+<div class="message bot">
+Hello! I'm FRIDAY AI. How can I help you?
+</div>
+</div>
+
+<div class="controls">
+<input id="input" placeholder="Ask FRIDAY anything...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+<button class="extra" onclick="startVoice()">🎙️ Talk to FRIDAY</button>
+<button class="extra" onclick="clearChat()">Clear Chat</button>
+</main>
+
+<footer>FRIDAY AI © 2026 | Created by Munyem Islam</footer>
+
+<script>
+const chat=document.getElementById("chat");
+const input=document.getElementById("input");
+
+function addMessage(text,type){
+const div=document.createElement("div");
+div.className="message "+type;
+div.textContent=text;
+chat.appendChild(div);
+chat.scrollTop=chat.scrollHeight;
+}
+
+function speak(text){
+if(!("speechSynthesis" in window))return;
+const voice=new SpeechSynthesisUtterance(text);
+voice.lang="en-US";
+voice.pitch=1.15;
+speechSynthesis.speak(voice);
+}
+
+function getReply(message){
+const t=message.toLowerCase();
+
+if(t.includes("hello")||t.includes("hi"))
+return "Hello! I'm FRIDAY, your personal assistant.";
+
+if(t.includes("your name"))
+return "My name is FRIDAY AI.";
+
+if(t.includes("how are you"))
+return "I'm doing great! How can I help you?";
+
+if(t.includes("time"))
+return "Current time: "+new Date().toLocaleTimeString();
+
+if(t.includes("date"))
+return "Today's date: "+new Date().toLocaleDateString();
+
+if(t.includes("bangla"))
+return "আমি FRIDAY AI। আপনাকে কীভাবে সাহায্য করতে পারি?";
+
+return "I'm still learning! My real AI engine is not connected yet.";
+}
+
+function sendMessage(){
+const message=input.value.trim();
+if(!message)return;
+addMessage(message,"user");
+input.value="";
+setTimeout(()=>{
+const reply=getReply(message);
+addMessage(reply,"bot");
+speak(reply);
+},500);
+}
+
+input.addEventListener("keydown",e=>{
+if(e.key==="Enter")sendMessage();
+});
+
+function startVoice(){
+const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!Recognition){
+alert("Voice recognition is not supported in this browser.");
+return;
+}
+const recognition=new Recognition();
+recognition.lang="en-US";
+recognition.onresult=e=>{
+input.value=e.results[0][0].transcript;
+sendMessage();
+};
+recognition.start();
+}
+
+function clearChat(){
+chat.innerHTML="";
+addMessage("Chat cleared. How can I help you?","bot");
+}
+</script>
+</body>
+</html>
