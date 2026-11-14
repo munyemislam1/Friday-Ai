@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050b18">
+<title>FRIDAY AI</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at center, #10264a, #030711 75%);
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #123c70;
+}
+
+header h1 {
+    color: #36baff;
+    letter-spacing: 4px;
+    text-shadow: 0 0 15px #008cff;
+    margin: 0;
+}
+
+.status {
+    color: #45eaff;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+main {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.core {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    margin: 25px auto;
+    border: 3px solid #31baff;
+    box-shadow: 0 0 20px #008cff,
+                inset 0 0 30px #008cff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite;
+}
+
+.core span {
+    font-size: 42px;
+    color: #7be7ff;
+    text-shadow: 0 0 20px #00aaff;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px #008cff,
+                    inset 0 0 30px #008cff;
+    }
+    50% {
+        box-shadow: 0 0 45px #00aaff,
+                    inset 0 0 45px #00aaff;
+    }
+}
+
+h2 {
+    color: #62d5ff;
+}
+
+#chat {
+    height: 260px;
+    overflow-y: auto;
+    background: rgba(5, 20, 40, .85);
+    border: 1px solid #1262a0;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: left;
+    margin-top: 20px;
+}
+
+.message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.user {
+    background: #103b65;
+    text-align: right;
+}
+
+.bot {
+    background: #09243d;
+    color: #7cddff;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #168bd0;
+    border-radius: 8px;
+    background: #07172b;
+    color: white;
+    font-size: 15px;
+}
+
+button {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 8px;
+    background: #087fc5;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+button:active {
+    background: #00aaff;
+}
+
+.voice {
+    width: 100%;
+    margin-top: 10px;
+}
+
+footer {
+    text-align: center;
+    color: #547b9e;
+    padding: 25px;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>FRIDAY AI</h1>
+    <div class="status">● PERSONAL AI SYSTEM ONLINE</div>
+</header>
+
+<main>
+
+    <div class="core">
+        <span>F</span>
+    </div>
+
+    <h2>Hello! I'm FRIDAY.</h2>
+    <p>Your personal AI assistant.</p>
+
+    <div id="chat">
+        <div class="message bot">
+            Hello! I'm FRIDAY AI. How can I help you today?
+        </div>
+    </div>
+
+    <div class="controls">
+        <input id="input" type="text"
+        placeholder="Ask FRIDAY anything...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <button class="voice" onclick="startVoice()">
+        🎙️ Talk to FRIDAY
+    </button>
+
+    <button class="voice" onclick="clearChat()">
+        Clear Chat
+    </button>
+
+</main>
+
+<footer>
+    FRIDAY AI © 2026 | Your Personal Assistant
+</footer>
+
+<script>
+
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+
+function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = "message " + type;
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function speak(text) {
+    if (!("speechSynthesis" in window)) return;
+
+    speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "en-US";
+    speech.rate = 1;
+    speech.pitch = 1.1;
+
+    const voices = speechSynthesis.getVoices();
+    const femaleVoice = voices.find(v =>
+        /female|zira|samantha|aria/i.test(v.name)
+    );
+
+    if (femaleVoice) speech.voice = femaleVoice;
+
+    speechSynthesis.speak(speech);
+}
+
+function getReply(message) {
+    const text = message.toLowerCase();
+
+    if (text.includes("hello") || text.includes("hi")) {
+        return "Hello! It's wonderful to talk with you. I'm FRIDAY AI.";
+    }
+
+    if (text.includes("your name")) {
+        return "My name is FRIDAY AI, your personal assistant.";
+    }
+
+    if (text.includes("who are you")) {
+        return "I'm FRIDAY, your personal digital assistant.";
+    }
+
+    if (text.includes("how are you")) {
+        return "I'm doing great! How can I help you?";
+    }
+
+    if (text.includes("time")) {
+        return "Your device time is " + new Date().toLocaleTimeString();
+    }
+
+    if (text.includes("date")) {
+        return "Today's date is " + new Date().toLocaleDateString();
+    }
+
+    if (text.includes("thank")) {
+        return "You're welcome! I'm always happy to help.";
+    }
+
+    return "I'm still learning! My full AI brain is not connected yet. Soon I'll be able to answer more questions.";
+}
+
+function sendMessage() {
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    addMessage(message, "user");
+    input.value = "";
+
+    setTimeout(() => {
+        const reply = getReply(message);
+        addMessage(reply, "bot");
+        speak(reply);
+    }, 500);
+}
+
+input.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+});
+
+function startVoice() {
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        alert("Voice recognition is not supported in this browser. Try Safari.");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+
+    recognition.onresult = function(event) {
+        input.value = event.results[0][0].transcript;
+        sendMessage();
+    };
+
+    recognition.onerror = function() {
+        alert("Microphone error. Please check microphone permission.");
+    };
+
+    recognition.start();
+}
+
+function clearChat() {
+    chat.innerHTML = "";
+    addMessage("Chat cleared. How can I help you?", "bot");
+}
+
+</script>
+
+</body>
+</html>
