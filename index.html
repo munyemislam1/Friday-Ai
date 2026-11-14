@@ -6,177 +6,351 @@
 <title>FRIDAY AI</title>
 
 <style>
-*{box-sizing:border-box}
-body{
-margin:0;
-background:radial-gradient(circle,#102c50,#030712);
-color:white;
-font-family:Arial,sans-serif;
-text-align:center;
+* {
+    box-sizing: border-box;
 }
-header{padding:22px;border-bottom:1px solid #164c7c}
-h1{color:#39c5ff;letter-spacing:5px}
-.status{color:#43eaff;font-size:12px}
-main{max-width:600px;margin:auto;padding:20px}
-.core{
-width:190px;height:190px;border:3px solid #27baff;
-border-radius:50%;margin:30px auto;
-display:flex;align-items:center;justify-content:center;
-box-shadow:0 0 30px #008cff,inset 0 0 30px #008cff;
-animation:glow 2s infinite;
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at center, #102849, #020712 75%);
+    color: white;
+    min-height: 100vh;
 }
-.core span{font-size:65px;color:#8beaff}
-@keyframes glow{
-50%{box-shadow:0 0 60px #00aaff,inset 0 0 45px #00aaff}
+
+header {
+    text-align: center;
+    padding: 20px;
+    color: #38c8ff;
+    letter-spacing: 4px;
+    font-size: 24px;
+    font-weight: bold;
 }
-h2{color:#55cfff}
-#chat{
-height:280px;overflow-y:auto;background:#07172a;
-border:1px solid #1764a0;border-radius:12px;
-padding:12px;text-align:left;margin-top:25px;
+
+.status {
+    text-align: center;
+    color: #00ffae;
+    font-size: 12px;
 }
-.message{padding:11px;margin:9px 0;border-radius:9px}
-.user{background:#123f68;text-align:right}
-.bot{background:#0c2944;color:#7de0ff}
-.controls{display:flex;gap:8px;margin-top:12px}
-input{
-flex:1;min-width:0;padding:14px;
-border:1px solid #168bd0;border-radius:9px;
-background:#07172b;color:white;font-size:15px;
+
+.core {
+    width: 155px;
+    height: 155px;
+    margin: 35px auto 25px;
+    border-radius: 50%;
+    border: 3px solid #24bfff;
+    box-shadow: 0 0 20px #008cff, inset 0 0 25px #008cff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    color: #65dcff;
+    animation: glow 2s infinite alternate;
 }
-button{
-padding:13px 17px;border:0;border-radius:9px;
-background:#078bd2;color:white;font-size:15px;
+
+@keyframes glow {
+    from { box-shadow: 0 0 15px #008cff; }
+    to { box-shadow: 0 0 45px #00c8ff, inset 0 0 30px #008cff; }
 }
-.extra{width:100%;margin-top:12px}
-footer{padding:25px;color:#6688a8;font-size:12px}
+
+.controls {
+    text-align: center;
+    margin: 15px;
+}
+
+select, button, input {
+    border: 1px solid #168bce;
+    background: #07182c;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+select {
+    width: 90%;
+    max-width: 320px;
+}
+
+#chat {
+    width: 92%;
+    max-width: 600px;
+    height: 260px;
+    overflow-y: auto;
+    margin: 15px auto;
+    padding: 15px;
+    border: 1px solid #1476b5;
+    border-radius: 15px;
+    background: rgba(0, 10, 25, .8);
+}
+
+.message {
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 10px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.user {
+    background: #123c60;
+    text-align: right;
+}
+
+.bot {
+    background: #092c36;
+    color: #69e7ff;
+}
+
+.input-area {
+    display: flex;
+    gap: 8px;
+    width: 92%;
+    max-width: 600px;
+    margin: 15px auto;
+}
+
+input {
+    flex: 1;
+    min-width: 0;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(.96);
+}
+
+.bottom {
+    text-align: center;
+    padding: 15px;
+    color: #6d9bbd;
+    font-size: 12px;
+}
 </style>
 </head>
 
 <body>
-<header>
-<h1>FRIDAY AI</h1>
-<div class="status">● PERSONAL AI SYSTEM ONLINE</div>
-</header>
 
-<main>
-<div class="core"><span>F</span></div>
-<h2>Hello! I'm FRIDAY.</h2>
-<p>Your personal AI assistant.</p>
+<header>FRIDAY AI</header>
+<div class="status">● SYSTEM ONLINE</div>
+
+<div class="core">FRIDAY</div>
+
+<div class="controls">
+    <select id="language" onchange="changeLanguage()">
+        <option value="en-US">English</option>
+        <option value="bn-BD">বাংলা (Bangla)</option>
+    </select>
+</div>
 
 <div id="chat">
-<div class="message bot">
-Hello! I'm FRIDAY AI. How can I help you?
+    <div class="message bot">
+        Hello! I am FRIDAY AI. How can I help you?
+    </div>
 </div>
+
+<div class="input-area">
+    <input id="userInput" type="text"
+    placeholder="Type your message...">
+
+    <button onclick="sendMessage()">➤</button>
+    <button onclick="startListening()">🎤</button>
 </div>
 
 <div class="controls">
-<input id="input" placeholder="Ask FRIDAY anything...">
-<button onclick="sendMessage()">Send</button>
+    <button onclick="clearChat()">Clear Chat</button>
+    <button onclick="toggleVoice()" id="voiceButton">
+        Voice: ON
+    </button>
 </div>
 
-<button class="extra" onclick="startVoice()">🎙️ Talk to FRIDAY</button>
-<button class="extra" onclick="clearChat()">Clear Chat</button>
-</main>
-
-<footer>FRIDAY AI © 2026 | Created by Munyem Islam</footer>
+<div class="bottom">
+    FRIDAY AI • Personal Assistant
+</div>
 
 <script>
-const chat=document.getElementById("chat");
-const input=document.getElementById("input");
 
-function addMessage(text,type){
-const div=document.createElement("div");
-div.className="message "+type;
-div.textContent=text;
-chat.appendChild(div);
-chat.scrollTop=chat.scrollHeight;
+const chat = document.getElementById("chat");
+const input = document.getElementById("userInput");
+const language = document.getElementById("language");
+
+let voiceEnabled = true;
+
+function addMessage(text, type) {
+    const message = document.createElement("div");
+    message.className = "message " + type;
+    message.textContent = text;
+    chat.appendChild(message);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function saveHistory() {
+    localStorage.setItem("fridayChat", chat.innerHTML);
+}
+
+function loadHistory() {
+    const saved = localStorage.getItem("fridayChat");
+    if (saved) chat.innerHTML = saved;
+}
+
+function changeLanguage() {
+    if (language.value === "bn-BD") {
+        input.placeholder = "আপনার মেসেজ লিখুন...";
+    } else {
+        input.placeholder = "Type your message...";
+    }
+}
+
+function getReply(text) {
+    const msg = text.toLowerCase();
+    const bangla = language.value === "bn-BD";
+
+    if (msg.includes("hello") || msg.includes("hi") ||
+        msg.includes("হ্যালো") || msg.includes("হাই")) {
+        return bangla
+            ? "হ্যালো! আমি FRIDAY AI। আপনাকে কীভাবে সাহায্য করতে পারি?"
+            : "Hello! I am FRIDAY AI. How can I help you?";
+    }
+
+    if (msg.includes("your name") || msg.includes("তোমার নাম")) {
+        return bangla
+            ? "আমার নাম FRIDAY AI।"
+            : "My name is FRIDAY AI.";
+    }
+
+    if (msg.includes("time") || msg.includes("সময়")) {
+        return bangla
+            ? "এখন সময় " + new Date().toLocaleTimeString("bn-BD")
+            : "The current time is " + new Date().toLocaleTimeString();
+    }
+
+    if (msg.includes("date") || msg.includes("তারিখ")) {
+        return bangla
+            ? "আজকের তারিখ " + new Date().toLocaleDateString("bn-BD")
+            : "Today's date is " + new Date().toLocaleDateString();
+    }
+
+    if (msg.includes("how are you") || msg.includes("কেমন আছ")) {
+        return bangla
+            ? "আমি ভালো আছি! আপনাকে সাহায্য করতে প্রস্তুত।"
+            : "I am doing great! Ready to help you.";
+    }
+
+    return bangla
+        ? "আপনার কথাটি বুঝেছি। তবে আমার AI ইঞ্জিন এখনো সংযুক্ত করা হয়নি।"
+        : "I received your message, but my AI engine is not connected yet.";
+}
+
+function sendMessage() {
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    addMessage(text, "user");
+
+    const reply = getReply(text);
+
+    setTimeout(() => {
+        addMessage(reply, "bot");
+
+        if (voiceEnabled) {
+            speak(reply);
+        }
+
+        saveHistory();
+    }, 500);
+
+    input.value = "";
+    saveHistory();
 }
 
 function speak(text) {
-    if (!("speechSynthesis" in window)) return;
+    if (!("speechSynthesis" in window)) {
+        return;
+    }
 
-    speechSynthesis.cancel();
-
-    const voices = speechSynthesis.getVoices();
-
-    const femaleVoice = voices.find(v =>
-        /samantha|ava|karen|moira|tessa|zira|aria|jenny/i.test(v.name)
-    );
+    window.speechSynthesis.cancel();
 
     const speech = new SpeechSynthesisUtterance(text);
 
-    speech.lang = "en-US";
+    speech.lang = language.value;
     speech.rate = 0.95;
     speech.pitch = 1.15;
+
+    const voices = window.speechSynthesis.getVoices();
+
+    const femaleVoice = voices.find(v =>
+        /female|samantha|ava|karen|moira|tessa|zira|aria|jenny/i.test(v.name)
+        && v.lang.toLowerCase().startsWith(
+            language.value.substring(0, 2).toLowerCase()
+        )
+    );
 
     if (femaleVoice) {
         speech.voice = femaleVoice;
     }
 
-    speechSynthesis.speak(speech);
+    window.speechSynthesis.speak(speech);
 }
 
+function startListening() {
+    const Recognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
 
-function getReply(message){
-const t=message.toLowerCase();
+    if (!Recognition) {
+        alert("Voice input is not supported in this browser. Try Safari or another supported browser.");
+        return;
+    }
 
-if(t.includes("hello")||t.includes("hi"))
-return "Hello! I'm FRIDAY, your personal assistant.";
+    const recognition = new Recognition();
 
-if(t.includes("your name"))
-return "My name is FRIDAY AI.";
+    recognition.lang = language.value;
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-if(t.includes("how are you"))
-return "I'm doing great! How can I help you?";
+    recognition.onresult = function(event) {
+        input.value = event.results[0][0].transcript;
+        sendMessage();
+    };
 
-if(t.includes("time"))
-return "Current time: "+new Date().toLocaleTimeString();
+    recognition.onerror = function() {
+        alert("Microphone error. Please check microphone permission.");
+    };
 
-if(t.includes("date"))
-return "Today's date: "+new Date().toLocaleDateString();
-
-if(t.includes("bangla"))
-return "আমি FRIDAY AI। আপনাকে কীভাবে সাহায্য করতে পারি?";
-
-return "I'm still learning! My real AI engine is not connected yet.";
+    recognition.start();
 }
 
-function sendMessage(){
-const message=input.value.trim();
-if(!message)return;
-addMessage(message,"user");
-input.value="";
-setTimeout(()=>{
-const reply=getReply(message);
-addMessage(reply,"bot");
-speak(reply);
-},500);
+function toggleVoice() {
+    voiceEnabled = !voiceEnabled;
+
+    document.getElementById("voiceButton").textContent =
+        voiceEnabled ? "Voice: ON" : "Voice: OFF";
+
+    if (!voiceEnabled && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+    }
 }
 
-input.addEventListener("keydown",e=>{
-if(e.key==="Enter")sendMessage();
+function clearChat() {
+    chat.innerHTML = "";
+    localStorage.removeItem("fridayChat");
+}
+
+input.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") sendMessage();
 });
 
-function startVoice(){
-const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!Recognition){
-alert("Voice recognition is not supported in this browser.");
-return;
-}
-const recognition=new Recognition();
-recognition.lang="en-US";
-recognition.onresult=e=>{
-input.value=e.results[0][0].transcript;
-sendMessage();
-};
-recognition.start();
+loadHistory();
+
+if ("speechSynthesis" in window) {
+    window.speechSynthesis.getVoices();
 }
 
-function clearChat(){
-chat.innerHTML="";
-addMessage("Chat cleared. How can I help you?","bot");
-}
 </script>
+
 </body>
 </html>
